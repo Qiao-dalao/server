@@ -3,6 +3,8 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var bodyParser = require('body-parser');
+const db = require('./model/db')
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -17,8 +19,11 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(bodyParser.json()); 
+app.use(bodyParser.urlencoded());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.get('/ceshi',require('./api/ceshi.js'))
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
