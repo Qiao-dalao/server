@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1 style="text-align: center;">数据上传页面</h1>
+    <div style="text-align: center;"    >
+        <input type="file" id="file">
+        <button>点击上传</button>
+        <div id="text"></div>
+    </div>
+    <script src='https://unpkg.com/axios/dist/axios.min.js'></script>
+    <script>
+        var msg=[]
+        var file = document.querySelector('#file')
+        var btn = document.querySelector('button')
+        file.onchange=function(){
+            var file = new FileReader()
+            file.readAsText(this.files[0])
+            file.onload = function(e){
+                // list = e.target.result.split('-')
+                // console.log(e.target.result.split('-'))
+                text.innerText = e.target.result.split('-')
+                msg = e.target.result.split('-')
+            }
+        }   
+        btn.onclick=function(){
+            tijiao(msg).then((res)=>{
+                alert(res.data)
+            })
+        }
+        function tijiao(data){
+            return axios({
+                method:'post',
+                data:data,
+                url:'http://112.124.21.193:3000/insertMsg'
+
+            })
+        }
+    </script>
+</body>
+</html>

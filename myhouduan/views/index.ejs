@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>获取身份证信息</title>
+</head>
+<body>
+    <h1 style="text-align: center;">每条信息只能获取一次，且不会再次出现</h1>
+    <div style="text-align: center;">
+        <button id="get">点击获取信息</button>
+        <br>
+        <h3 id="msg"></h3>
+    </div>
+    <script src='https://unpkg.com/axios/dist/axios.min.js'></script>
+    <script>
+        var get = document.querySelector('#get')
+        var msg = document.querySelector('#msg')
+        get.onclick=function(){
+            getMsg().then((res)=>{
+                console.log(res.data)
+                msg.innerHTML= res.data.msg
+            })
+        }
+        function getMsg(){
+            return axios({
+                method:'get',
+                url:'http://112.124.21.193:3000/get'
+            })
+        }
+    </script>
+</body>
+</html>
