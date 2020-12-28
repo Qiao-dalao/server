@@ -1,20 +1,73 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=0,viewport-fit=cover"><meta name="google" content="notranslate"><script src="https://webapi.amap.com/maps?v=1.4.3&key=cf00eddfcdb206e64ffef64161404b3c"></script><link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css"><!--[if IE]><link rel="icon" href="favicon.ico"><![endif]--><title></title><style>* {
-				margin: 0;
-				padding: 0;
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.3&key=cf00eddfcdb206e64ffef64161404b3c"></script>
+		<link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css" />
+	</head>
+	<body>
+		<div id='box'></div>
+		<div class="container"></div>
+		<script type="text/javascript">
+			let box = document.querySelector('#box')
+			var map,lineArr=[]
+			function getLocation(){
+				AMap.plugin('AMap.Geolocation', function() {
+					var geolocation = new AMap.Geolocation({
+						// 是否使用高精度定位，默认：true
+						enableHighAccuracy: true,
+						// 设置定位超时时间，默认：无穷大
+						timeout: 10000,
+						// 定位按钮的停靠位置的偏移量，默认：Pixel(10, 20)
+						buttonOffset: new AMap.Pixel(10, 20),
+						//  定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+						zoomToAccuracy: true,
+						//  定位按钮的排放位置,  RB表示右下
+						buttonPosition: 'RB'
+					})
+				
+					geolocation.getCurrentPosition()
+					AMap.event.addListener(geolocation, 'complete', onComplete)
+					AMap.event.addListener(geolocation, 'error', onError)
+				
+					function onComplete(result) {
+						// data是具体的定位信息
+						box.innerText = result.formattedAddress
+						let j = JSON.parse(JSON.stringify(result.position.lng))
+						let w = JSON.parse(JSON.stringify(result.position.lat))
+						let position = [j, w]
+						// console.log(position,'position')
+						// this.lineArr[] = position
+						// this.lineArr.push(position)
+						console.log(lineArr,'END')
+						console.log(result.addressInfo,'addressInfo')
+						map = new AMap.Map("container", {
+							resizeEnable: true,
+							center: [position],
+							zoom: 17,
+							// scrollWheel:true
+						});
+						
+						var polyline = new AMap.Polyline({
+							map: map,
+							path: lineArr,
+							showDir: true,
+							strokeColor: "#28F", //线颜色
+							strokeOpacity: 1, //线透明度
+							strokeWeight: 6, //线宽
+							strokeStyle: "solid" //线样式
+						});
+					}
+				
+					function onError(data) {
+						// 定位出错
+						
+						box.innerText = JSON.stringify(data)
+					}
+				})
 			}
-
-			html,
-			body,
-			#container {
-				height: 100%;
-				width: 100%;
-			}
-
-			.input-card .btn {
-				margin-right: 1.2rem;
-				width: 9rem;
-			}
-
-			.input-card .btn:last-child {
-				margin-right: 0;
-			}</style><link href="css/chunk-1c618407.8f4d12e4.css" rel="prefetch"><link href="css/chunk-29665654.eeeacae9.css" rel="prefetch"><link href="css/chunk-3ed030ba.b362c0a5.css" rel="prefetch"><link href="css/chunk-4c874e45.9ce91e05.css" rel="prefetch"><link href="css/chunk-50883b6c.9a32f0cd.css" rel="prefetch"><link href="css/chunk-52799aea.cdfe216a.css" rel="prefetch"><link href="css/chunk-a5b083ae.b613032a.css" rel="prefetch"><link href="css/chunk-c3e2665a.7ebe56da.css" rel="prefetch"><link href="js/chunk-01caaa18.de269856.js" rel="prefetch"><link href="js/chunk-1c618407.39962780.js" rel="prefetch"><link href="js/chunk-28bb3c5e.f5d7a9ba.js" rel="prefetch"><link href="js/chunk-29665654.f61a6be8.js" rel="prefetch"><link href="js/chunk-2d21844d.a9acaf78.js" rel="prefetch"><link href="js/chunk-3ed030ba.5c976359.js" rel="prefetch"><link href="js/chunk-4c874e45.66c65653.js" rel="prefetch"><link href="js/chunk-50883b6c.8a5c170f.js" rel="prefetch"><link href="js/chunk-52799aea.c352ea01.js" rel="prefetch"><link href="js/chunk-a5b083ae.cae74aec.js" rel="prefetch"><link href="js/chunk-c3e2665a.3c086945.js" rel="prefetch"><link href="css/app.650df5ba.css" rel="preload" as="style"><link href="css/chunk-vendors.f7218bc6.css" rel="preload" as="style"><link href="js/app.a29f9486.js" rel="preload" as="script"><link href="js/chunk-vendors.fc9fde14.js" rel="preload" as="script"><link href="css/chunk-vendors.f7218bc6.css" rel="stylesheet"><link href="css/app.650df5ba.css" rel="stylesheet"><link rel="icon" type="image/png" sizes="32x32" href="img/icons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="img/icons/favicon-16x16.png"><link rel="manifest" href="manifest.json"><meta name="theme-color" content="#4DBA87"><meta name="apple-mobile-web-app-capable" content="no"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="fromput"><link rel="apple-touch-icon" href="img/icons/apple-touch-icon-152x152.png"><link rel="mask-icon" href="img/icons/safari-pinned-tab.svg" color="#4DBA87"><meta name="msapplication-TileImage" content="img/icons/msapplication-icon-144x144.png"><meta name="msapplication-TileColor" content="#000000"></head><body><div id="app"></div><script src="js/chunk-vendors.fc9fde14.js"></script><script src="js/app.a29f9486.js"></script></body></html>
+			getLocation()
+		</script>
+	</body>
+</html>
