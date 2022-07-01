@@ -1,73 +1,78 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh">
 	<head>
-		<meta charset="utf-8">
-		<title></title>
-		<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.3&key=cf00eddfcdb206e64ffef64161404b3c"></script>
-		<link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css" />
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Document</title>
+		<style>
+			.list {
+				border: solid;
+				width: 100px;
+				height: 40px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				margin-top: 20px;
+			}
+			.active {
+				background-color: cornflowerblue;
+				color: white;
+			}
+		</style>
 	</head>
 	<body>
-		<div id='box'></div>
-		<div class="container"></div>
-		<script type="text/javascript">
-			let box = document.querySelector('#box')
-			var map,lineArr=[]
-			function getLocation(){
-				AMap.plugin('AMap.Geolocation', function() {
-					var geolocation = new AMap.Geolocation({
-						// 是否使用高精度定位，默认：true
-						enableHighAccuracy: true,
-						// 设置定位超时时间，默认：无穷大
-						timeout: 10000,
-						// 定位按钮的停靠位置的偏移量，默认：Pixel(10, 20)
-						buttonOffset: new AMap.Pixel(10, 20),
-						//  定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
-						zoomToAccuracy: true,
-						//  定位按钮的排放位置,  RB表示右下
-						buttonPosition: 'RB'
-					})
-				
-					geolocation.getCurrentPosition()
-					AMap.event.addListener(geolocation, 'complete', onComplete)
-					AMap.event.addListener(geolocation, 'error', onError)
-				
-					function onComplete(result) {
-						// data是具体的定位信息
-						box.innerText = result.formattedAddress
-						let j = JSON.parse(JSON.stringify(result.position.lng))
-						let w = JSON.parse(JSON.stringify(result.position.lat))
-						let position = [j, w]
-						// console.log(position,'position')
-						// this.lineArr[] = position
-						// this.lineArr.push(position)
-						console.log(lineArr,'END')
-						console.log(result.addressInfo,'addressInfo')
-						map = new AMap.Map("container", {
-							resizeEnable: true,
-							center: [position],
-							zoom: 17,
-							// scrollWheel:true
-						});
-						
-						var polyline = new AMap.Polyline({
-							map: map,
-							path: lineArr,
-							showDir: true,
-							strokeColor: "#28F", //线颜色
-							strokeOpacity: 1, //线透明度
-							strokeWeight: 6, //线宽
-							strokeStyle: "solid" //线样式
-						});
-					}
-				
-					function onError(data) {
-						// 定位出错
-						
-						box.innerText = JSON.stringify(data)
-					}
-				})
+		<h1 id="res" style="text-align: center;">请开始抽取</h1>
+		<div
+			style="width: 400px;border: 1px solid rgba(0, 0, 0, .2);border-radius: 20px;position: fixed;left: 50%;top: 50%;transform: translate(-50%,-50%);text-align: center;padding: 20px;">
+			<h1>随机抽取一个人请大家吃饭</h1>
+			<div style="display: flex;justify-content: space-between;flex-wrap: wrap;" id="personList"></div>
+			<button style="margin-top: 30px;height: 40px;width: 80px;" id="start">开始抽取</button>
+			<button style="margin-top: 30px;height: 40px;width: 80px;display: none;" id="end" >结束</button>
+			<button style="margin-top: 30px;height: 40px;width: 80px;" id="clear" >清空</button>
+		</div>
+
+		<script>
+			var timeout = null
+			var lists = document.getElementsByClassName('list')
+			var personData = ['翟振雄','邹佳豪','乔鹏乾']
+			var dom = ''
+			for(var i=0;i<personData.length;i++){
+				dom+='<div class="list">'+personData[i]+'</div>'
 			}
-			getLocation()
+			personList.innerHTML = dom
+			
+			function clearChose(){
+				for(var i=0;i<lists.length;i++){
+					lists[i].classList.remove('active')
+				}
+			}
+			
+			start.onclick = function() {
+				end.style.display='inline-block'
+				this.style.display='none'
+				clear.style.display='none'
+				clear.click()
+				timeout = setInterval(function() {
+					var index = Math.round(Math.random()*(lists.length-1))
+					console.log(index,'index')
+					clearChose()
+					lists[index].classList.add('active')
+				}, 50)
+			}
+			end.onclick=function(){
+				clearInterval(timeout)
+				clearChose()
+				clear.style.display='inline-block'
+				lists[0].classList.add('active')
+				start.style.display='inline-block'
+				this.style.display='none'
+				res.innerText = '恭喜'+lists[0].innerText+'，抽到了请大家吃饭的机会'
+			}
+			clear.onclick=function(){
+				clearChose()
+				res.innerText = '请开始抽取'
+			}
 		</script>
 	</body>
 </html>
